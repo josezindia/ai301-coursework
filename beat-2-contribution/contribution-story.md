@@ -59,11 +59,48 @@ one in the week it belongs to.
 
 I updated the skill’s scope and search strategy to reflect my Python, backend, infrastructure, automation, and AI systems interests. Some searches returned weak, already-claimed, or overly broad issues, and one query initially returned no useful results. I refined the search query and ranking approach, documented the problems in `scan-notes.md`, and reran the scout with improved results.
 
-**Unit 6: [one line on the tool work]**
+**Unit 6: Added communication safeguards, repository memory, and reproducibility checks for my real contribution.**
 
-[2-4 sentences: the voice-guard, the repo-memory file. What broke or
-fell short, and what changed because of it. "Nothing broke" counts when
-it is true - say how you know.]
+I installed and tested the voice guard so outgoing GitHub comments are checked against my communication rules before posting. I also created a local `CLAUDE.local.md` for `alltheplaces` with the repository conventions, relevant Isuzu spider patterns, and required test commands. The main issue I hit was that the initial reproduction used plain `curl`, which returned HTTP 403 even though the repository's Scrapy client could access the endpoint; I changed the reproduction to use Scrapy and confirmed the API returned the expected dealer data.
+
+---
+
+## Why I Chose This Issue
+
+I used my `issue-scout` to search for newcomer-sized issues that matched my preference for Python, backend work, APIs, infrastructure, and automation rather than frontend-heavy changes. The scan surfaced `alltheplaces/alltheplaces` issue #8510, which asks for an Australian Isuzu UTE spider backed by an official dealer API. After updating the scout's scope-feasibility rule and re-grading the issue, the scout returned an `accept` verdict with a straightforward difficulty rating.
+
+I chose it because it is a bounded Python contribution with a real external API, existing spider patterns to learn from, and a clear way to verify the result. It also gives me practice understanding an unfamiliar codebase before making a focused open-source contribution. The scout initially treated some open-ended design details too harshly, so I changed the rubric so those details affect the difficulty assessment instead of automatically rejecting an otherwise feasible issue.
+
+Claim comment: https://github.com/alltheplaces/alltheplaces/issues/8510#issuecomment-6909757445
+
+**Toolkit**
+
+- Tool: `issue-scout`; I used its search strategy and rubric to find and re-grade open-source issues that matched my Python, backend, infrastructure, API, and automation interests.
+- What it produced: It found issue #8510 and ultimately graded it `accept` with a straightforward difficulty rating after checking repository activity, issue availability, scope, and contribution fit.
+- Difficulties: The original scope check could reject bounded issues simply because they contained an open design edge, and some searches returned weak, claimed, or overly broad issues.
+- What changed: I replaced the old newcomer-scope check with a `scope-feasible` check so open design questions increase difficulty instead of automatically causing rejection, then re-ran the scout before choosing the issue.
+
+---
+
+## Reproduction Process
+
+**Environment Setup**
+
+I reproduced the issue on macOS 26.5.2 using `uv` 0.13.8, Python 3.11.5, and Scrapy 2.19.0. I cloned my fork of `alltheplaces/alltheplaces`, ran `uv sync`, and verified the project setup with `uv run scrapy`. The repository was at commit `7f884e7c743256597d197ea7dc1af88a8b257309`.
+
+The main challenge was that a plain `curl` request to the Isuzu UTE dealer endpoint returned HTTP 403. I then tested the same endpoint through the project's Scrapy environment, which successfully received HTTP 200 and returned the dealer data.
+
+**Steps to Reproduce**
+
+1. Confirm that `locations/spiders/isuzu_au.py` does not exist in the repository.
+2. Fetch the official dealer endpoint with `uv run scrapy fetch "https://www.isuzuute.com.au/isuzuapi/Dealer/GetAllDealers"` and save the returned JSON.
+3. Inspect the `Dealers` array. It contains 165 records, including `7207` Blacklocks Isuzu UTE and `7208` Hunter Isuzu UTE. This matches the 165 locations stated in issue #8510.
+
+**Reproduction Evidence**
+
+- **Commit showing reproduction:** `7f884e7c743256597d197ea7dc1af88a8b257309`
+- **Screenshots/logs:** Scrapy returned HTTP 200 and the dealer response contained 165 records. Three records are currently marked `IsActive: False`, so the final spider output may contain fewer than 165 active locations depending on the repository's expected filtering behavior.
+- **My findings:** The official API is still available through the project's Scrapy client and contains the data needed for an Australian Isuzu UTE spider, including dealer identifiers, addresses, coordinates, contact details, opening hours, and Sales, Service, and Parts information. There is no existing `isuzu_au.py` spider, so issue #8510 remains actionable.
 
 **Unit 7: [one line on the tool work]**
 
