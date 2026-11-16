@@ -12,7 +12,7 @@ files and no evidence uploads are part of Assignment 5.
 **GitHub Username:** [your GitHub username, exactly as it appears on your profile - no @, no
 profile URL. Your comments upstream are identified by this name.]
 **Issue:** [GitHub issue link]
-**Pull Request:** [GitHub PR link, once opened]
+**Pull Request:** https://github.com/alltheplaces/alltheplaces/pull/20576
 
 One repository, built across units 5 to 8, telling the whole story of your real
 contribution. Fill it as you work, not at the end — the sections below ask for evidence that
@@ -241,25 +241,22 @@ Ran the spider and inspected the output: 165 features, matching the 165 API reco
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when opened]
+**PR Link:** https://github.com/alltheplaces/alltheplaces/pull/20576
 
-**PR Description:** [what the PR says; much of the content above
-adapts into it]
+**PR Title:** Add isuzu_au spider (165 locations)
+
+**PR Description:** The PR adds the `isuzu_au` spider for Australian Isuzu UTE dealers, reading the official dealer API and producing 165 locations.
 
 **Maintainer Feedback:**
 
-- [Date]: [feedback received, or "none yet"; silence is a normal
-  state and costs you nothing]
-- [Date]: [how you addressed it]
+- 2026-11-16: none yet
 
-**Status:** [Awaiting review / Iterating / Merged / Closed. The
-status is a fact you record, never a grade: the PR is graded as
-opened.]
+**Status:** Awaiting review
 
 **Toolkit**
 
-- Tool:
-- What it produced:
+- Tool: my `ship-gate` with the gate manifest, then the `pr-precheck` skill on the branch, PR title and description before opening the PR.
+- What it produced: `ship-gate` passed all manifest checks and `pr-precheck` passed its checks before the PR was opened.
 - Difficulties:
 - What changed:
 
