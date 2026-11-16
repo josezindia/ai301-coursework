@@ -1,4 +1,4 @@
-# Contribution: [Issue Title]
+# Contribution: Isuzu Ute (shop/car, shop/car_repair, shop/car_parts) (AU) (165 locations)
 
 Path: `beat-2-contribution/contribution-story.md`
 
@@ -8,10 +8,9 @@ format criteria grade exactly that. Your course repo link is the whole submissio
 files and no evidence uploads are part of Assignment 5.
 
 **Contribution Number:** [1]
-**Student:** [Student name]
-**GitHub Username:** [your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comments upstream are identified by this name.]
-**Issue:** [GitHub issue link]
+**Student:** Jose
+**GitHub Username:** josezindia
+**Issue:** https://github.com/alltheplaces/alltheplaces/issues/8510
 **Pull Request:** https://github.com/alltheplaces/alltheplaces/pull/20576
 
 One repository, built across units 5 to 8, telling the whole story of your real
@@ -63,15 +62,13 @@ I updated the skill’s scope and search strategy to reflect my Python, backend,
 
 I installed and tested the voice guard so outgoing GitHub comments are checked against my communication rules before posting. I also created a local `CLAUDE.local.md` for `alltheplaces` with the repository conventions, relevant Isuzu spider patterns, and required test commands. The main issue I hit was that the initial reproduction used plain `curl`, which returned HTTP 403 even though the repository's Scrapy client could access the endpoint; I changed the reproduction to use Scrapy and confirmed the API returned the expected dealer data.
 
-**Unit 7: [one line on the tool work]**
+**Unit 7: Wrote a gate manifest for `alltheplaces` and ran the ship-gate on my real branch before opening the PR.**
 
-[2-4 sentences: the ship-gate and your gate manifest. What it produced
-on your real branch, what fought you, what changed because of it.]
+I built `ship-manifest.md` from the checks the repository itself requires: `uv sync --frozen` from the README setup, `uv run pytest tests/test_item_attributes.py -q` from `AGENTS.md`, and `uv run pre-commit run --all-files` from the pre-commit and CI configuration. On `feat/8510-isuzu-au`, the ship-gate ran every manifest check and passed, and `pr-precheck` then passed the branch, title and description. The work that took care was tracing each check to a repository source instead of guessing; I also found no checks I needed to exclude, so the excluded table stays empty.
 
-**Unit 8: [one line on the tool work]**
+**Unit 8: Installed and used the PR monitor on PR #20576 and wrote an `alltheplaces`-specific playbook.**
 
-[2-4 sentences: the PR-monitor and your playbook. What it read, what it
-drafted, what you did with the draft.]
+The monitor read the scraper-bot comment on PR #20576 and initially classified the PR as FEEDBACK-IN, but its drafted move correctly recommended no reply and waiting for human review. I kept the draft off the PR thread. In my playbook I set a 3-day human-review quiet period based on recent merged `alltheplaces` contributor PRs, and bot comments such as the scraper-bot's CI report do not reset that clock.
 
 ---
 
@@ -175,7 +172,7 @@ Each dealer becomes one location carrying every category that applies to it (car
 3. Run `uv run scrapy runspider locations/spiders/isuzu_au.py -o /tmp/out.geojson -L INFO` and read several output records, not just the count.
 4. Run `uv run pytest tests/test_item_attributes.py -q` and `uv run pre-commit run --files locations/spiders/isuzu_au.py`.
 
-Deviations: none yet.
+Deviations: none to the design. During implementation, dealer `7242` turned out to be `IsActive: False` while still carrying Sales data; it is recorded in Implementation Notes and did not change the plan.
 
 **Toolkit**
 
@@ -222,6 +219,10 @@ I read individual records rather than relying on the count, picking dealers that
 
 **2026-11-16**
 
+Accepted the plan: after revising it for nested department data, irregular hours, missing `Website` values and `apply_category` overwriting `shop`, `plan-check` returned `accept`, and I built from that version.
+
+**2026-11-16**
+
 Created `locations/spiders/isuzu_au.py` on branch `feat/8510-isuzu-au` as a `JSONBlobSpider` reading the `Dealers` array, with `item_attributes = ISUZU_SHARED_ATTRIBUTES`. As planned after `plan-check`, the fields are mapped explicitly rather than through `DictParser`: the spider takes the first department present (Sales, then Service, then Parts) and reads address, coordinates, phone, email and website from it, using the dealer `Code` as `ref`. `Website` is read only when present, because some dealers (for example `7236a`) have none.
 
 Categories follow the one-feature-per-dealer strategy. Because `apply_category` overwrites `shop`, each dealer gets a single `shop` value: `shop=car` when it has Sales data, otherwise `shop=car_repair`. Repair service on a sales dealer and parts sales are recorded with `apply_yes_no` extras (`service:vehicle:car_repair`, `service:vehicle:car_parts`) instead of competing `shop` tags. Opening hours are built by passing each `"<day> <hours>"` string to `OpeningHours.add_ranges_from_string`.
@@ -229,6 +230,14 @@ Categories follow the one-feature-per-dealer strategy. Because `apply_category` 
 **2026-11-16**
 
 Ran the spider and inspected the output: 165 features, matching the 165 API records, so nothing was dropped and the pipelines did not exclude the `IsActive: False` records. Small plan correction: dealer `7242` (Bathurst Isuzu UTE) is marked `IsActive: False` at the top level but still has full Sales, Service and Parts data, so under the Sales rule it is tagged `shop=car`. The plan had not considered that an inactive record could still carry sales data. I kept the planned behaviour of not filtering inactive records early. This correction did not change the overall design: still one new file, one feature per dealer, and the same category rules. Then ran `pytest` (3 passed) and `pre-commit` (passed) on the new file.
+
+**2026-11-16**
+
+Ran the ship-gate against `ship-manifest.md` on `feat/8510-isuzu-au`: `uv sync --frozen`, the item-attribute tests and `pre-commit run --all-files` all passed, and `pr-precheck` passed the branch, title and description. Opened PR #20576, "Add isuzu_au spider (165 locations)".
+
+**2026-11-16**
+
+The scraper-bot ran the spider on the PR and reported a `success` with 165 items, matching my local run. The PR monitor classified this as FEEDBACK-IN, but its drafted move was to not reply and wait for human review, which I agreed with. I kept the draft off the PR thread and am waiting out the 3-day human-review quiet period from my playbook; the bot comment does not reset it.
 
 **Toolkit**
 
@@ -249,16 +258,18 @@ Ran the spider and inspected the output: 165 features, matching the 165 API reco
 
 **Maintainer Feedback:**
 
-- 2026-11-16: none yet
+- November 16, 2026: no human maintainer feedback yet.
+- The scraper-bot ran the spider successfully and reported 165 items.
+- I did not reply because the bot reported success and there was no maintainer question or requested change.
 
 **Status:** Awaiting review
 
 **Toolkit**
 
-- Tool: my `ship-gate` with the gate manifest, then the `pr-precheck` skill on the branch, PR title and description before opening the PR.
-- What it produced: `ship-gate` passed all manifest checks and `pr-precheck` passed its checks before the PR was opened.
-- Difficulties:
-- What changed:
+- Tool: my `ship-gate` with the gate manifest, then the `pr-precheck` skill on the branch, PR title and description before opening the PR; after opening it, the PR monitor with my `alltheplaces` playbook.
+- What it produced: `ship-gate` passed all manifest checks and `pr-precheck` passed its checks before the PR was opened. The PR monitor read the scraper-bot's 165-item success report and drafted a "no reply, wait for human review" move.
+- Difficulties: the monitor first classified the bot's CI comment as FEEDBACK-IN, as if it were maintainer feedback needing a response, even though nothing in it asked for a change.
+- What changed: I kept the draft off the PR thread, and my playbook now sets a 3-day human-review quiet period, based on recent merged contributor PRs, that bot comments do not reset.
 
 ---
 
@@ -266,25 +277,22 @@ Ran the spider and inspected the output: 165 features, matching the 165 API reco
 
 **Technical Skills Gained**
 
-[What you learned technically, named concretely.]
+I learned how an `alltheplaces` spider is put together: `JSONBlobSpider` for reading a JSON array, shared brand attributes like `ISUZU_SHARED_ATTRIBUTES`, `apply_category` and `apply_yes_no` for tags, and `OpeningHours.add_ranges_from_string` for messy hours text. The bigger lesson was to validate my assumptions against the real API data instead of guessing. I assumed `DictParser` would map the fields and that I could put three `shop` categories on one dealer; the actual response had nested department data, missing websites and irregular hours, and `apply_category` overwrites `shop`. I also learned to read crawl stats and individual output records together, since a matching count of 165 said nothing about whether categories or hours were right.
 
 **Challenges Overcome**
 
-[What was hard and how you solved it; point at the real events, the
-Toolkit blocks above are full of them.]
+The first surprise was the endpoint returning HTTP 403 to `curl`, which made the API look dead; reproducing with the project's own Scrapy client showed it was fine. The harder part was that repository conventions mattered as much as code correctness. A spider that ran was not enough: it had to reuse the shared Isuzu attributes, follow the category conventions, and leave cleanup to the pipelines. What got me through was treating each tool as a separate safety check. `repro-check` confirmed the problem was real, `plan-check` caught the data-shape and `apply_category` problems before I wrote code, the ship-gate made sure the repository's own checks passed before I opened the PR, and the PR monitor kept me from replying to a bot comment that needed no answer.
 
 **What I'd Do Differently Next Time**
 
-[Reflection on your process.]
+I would inspect the raw data shape and the closest repository examples much earlier. Most of the plan revisions came from things I could have seen by reading a few full API records and a couple of similar spiders before writing the first plan, instead of having `plan-check` point them out. I would also look up the project's review pace before opening the PR, so I know from the start how long to wait before following up.
 
 ---
 
 ## Resources Used
 
-[What actually helped, not a reading list. List things this story
-already shows you using: the doc you followed to set the environment
-up, the thread that explained the bug, the person who answered you.
-One real entry beats ten plausible ones.]
-
-- [Link to documentation that helped]
-- [Discussion, issue, or post that helped]
+- `alltheplaces` `AGENTS.md` and repository spider examples (`isuzu_jp.py`, `isuzu_th.py`, `templates/spiders/json_blob.tmpl`): the conventions, helpers and test commands the spider follows.
+- Issue #8510: https://github.com/alltheplaces/alltheplaces/issues/8510, the request and the expected categories and location count.
+- Official Isuzu UTE Australia dealer API: `https://www.isuzuute.com.au/isuzuapi/Dealer/GetAllDealers`, the data source I reproduced against and built from.
+- CodePath `issue-scout`, `repro-check`, `plan-check`, `ship-gate` and PR-monitor materials: the tools and templates I used at each phase.
+- GitHub PR #20576 and the scraper-bot CI output: https://github.com/alltheplaces/alltheplaces/pull/20576, which confirmed 165 items and a `success` run.
