@@ -2,117 +2,127 @@
 
 Path: `beat-3-portfolio/toolkit-portfolio.md`
 
-This file is Assignment 6, and it is graded at the path above; a copy kept anywhere else in
-the repository is not read. It has been waiting here since you created the repo in unit 1;
-unit 9 is when you write it.
-
-**Only this page is read.** Your `tools/` folders and your installed skill folders are never
-opened, so every piece of evidence you want seen has to live inline here: an output excerpt,
-a before/after pair, a dated commit reference.
-
-**Write every sentence yourself.** AI may gather diffs, dates and excerpts for you; it does
-not draft entries.
-
-**Keep every section header below under its exact name** — Featured Tools, Inventory, The
-Arc, and Limitations and What's Next. Feature three or four tools, each in the entry shape
-shown below; give every other tool one inventory line.
-
-**Some lines below are labelled, and the label is how they are read.** Three places on this
-page use a `Label: your words` shape — the arc's beats, the tool-limits list, and nothing
-else. Keep those labels exactly as written, one per line, and never delete a labelled line:
-where you have nothing to put after a label, write `none` and move on. A deleted label reads
-as a deleted answer.
-
-**Before you finish**, replace every `[bracketed prompt]` with your own words, then delete
-the unused `[Tool name]` entry stub, its copy-me sentence, and the prompt sentences under
-each header. A leftover bracketed prompt reads as unfilled.
-
-**Student:** [Student name]
+**Student:** Jose
 
 ## Featured Tools
 
-Three or four tools, presented in depth. Open with a few sentences
-on why you chose these.
+I used my `issue-scout` to search for newcomer-sized issues that matched my preference for Python, backend work, APIs, infrastructure, and automation rather than frontend-heavy changes. What got me through was treating each tool as a separate safety check. `repro-check` confirmed the problem was real, the ship-gate made sure the repository's own checks passed before I opened the PR, and the PR monitor kept me from replying to a bot comment that needed no answer.
 
-Full credit asks the featured set to show real change: **at least two** of your featured
-entries should show a tool that visibly moved through use. An honest entry for a tool that
-barely changed — saying so, dating what did happen, and giving the reason — earns the solid
-middle tier and never fails you.
+**issue-scout**
 
-Each tool's honest limit is not written here. It goes in the tool-limits list at the
-bottom of this page, one line per featured tool, so that the limits sit together and can be
-read as a set.
+**What it is, and the judgment hole I wrote:** I used its search strategy and rubric to find and re-grade open-source issues that matched my Python, backend, infrastructure, API, and automation interests. I updated the skill's scope and search strategy to reflect my Python, backend, infrastructure, automation, and AI systems interests. My fit profile says:
 
-[Why these tools, in your own words.]
+> I prefer issues that are clearly scoped and reproducible, especially those involving Python, backend systems, infrastructure, cloud, Windows/Linux environments, CI/CD, GitHub Actions, or automation. I would like to avoid issues that depend heavily on frontend design work, obscure languages, or large architectural changes.
 
-Copy the entry shape below once per featured tool and fill it there.
+**How it evolved, dated:**
 
-**[Tool name]**
+- 2026-09-28 (Unit 1, `issue-select`): I revised the `Newcomer-sized scope` check because my first version was too strict and rejected issues just because they involved several related files or had a long description. I revised it to focus on concrete warning signs instead: umbrella scope, support-only questions, unresolved design work, core-internal changes, or a long history of failed contribution attempts.
+- 2026-11-15 (Unit 5, commit `56a33c3`): Some searches returned weak, already-claimed, or overly broad issues, and one query initially returned no useful results. I refined the search query and ranking approach, documented the problems in `scan-notes.md`, and reran the scout with improved results. The original scope check could reject bounded issues simply because they contained an open design edge, so I replaced the old newcomer-scope check with a `scope-feasible` check so open design questions increase difficulty instead of automatically causing rejection, then re-ran the scout before choosing the issue.
 
-**What it is, and the judgment hole I wrote:** [what the tool does,
-and the part of it that is your judgment: the rubric, strategy,
-guide, manifest, or playbook you wrote.]
+**Evidence:**
 
-**How it evolved, dated:** [the changes that made it yours, each
-with its date and the friction that drove it; your weekly Toolkit
-entries are the source.]
+- Unit 1 run history: `16/20 → 1/4 targeted → 1/1 issue-01 → 1/1 issue-19 → 1/1 issue-15 → 3/3 targeted → 19/20 full run → 18/20 final saved run.`
+- Before (Unit 1 rubric row): `Newcomer-sized scope | ... | Pass unless the issue is explicitly an umbrella or tracking issue, is purely a usage/support question, has unresolved design debate with no maintainer decision, or a maintainer states that the fix requires changes to core internals. ... | required`
+- After (Unit 5): a `scope-feasible` check, so open design questions increase difficulty instead of automatically causing rejection.
+- Result: the scan surfaced `alltheplaces/alltheplaces` issue #8510, which asks for an Australian Isuzu UTE spider backed by an official dealer API. After updating the scout's scope-feasibility rule and re-grading the issue, the scout returned an `accept` verdict with a straightforward difficulty rating.
+- Claim comment: https://github.com/alltheplaces/alltheplaces/issues/8510#issuecomment-6909757445
 
-**Evidence:** [show, don't claim: an output excerpt, a before/after
-pair, or a dated commit reference, inline here. Draw it from your real
-term work where you can - a catch this tool actually made, a
-before/after from your own repo or PR - which is graded separately from
-whether an artifact is present at all. A short, telling excerpt beats a
-pasted transcript.]
+**repro-check**
+
+**What it is, and the judgment hole I wrote:** `repro-check`, which I used to grade my reproduction against the issue before posting. My rubric has five checks: Environment recorded, Reproduction steps, Behavior matches issue, Honest outcome, and Repository communication. I made all five checks required because each proof family can prevent a bad reproduction package from being posted. A failing command alone is not enough. The evidence must show the same behavior described by the issue rather than a nearby or unrelated failure.
+
+**How it evolved, dated:**
+
+- 2026-10-04 (Unit 2, commit `3fe2478`): The first full eval scored 18/20 overall, but the disclosure category floor was not met. My original communication rule was too general, so I refined it to distinguish between general code or PR guidance and requirements that explicitly apply to issue comments. After that change, pkg-20 was correctly rejected while packages without comment-specific disclosure requirements could still pass.
+- 2026-11-16 (Unit 6, commits `313486e` and `cd7fbe4`): The initial reproduction used plain `curl`, which returned HTTP 403 even though the repository's Scrapy client could access the endpoint. I reproduced with the project's own Scrapy client instead of `curl`, and recorded the 3 `IsActive: False` records so the final location count can be explained.
+
+**Evidence:**
+
+- Unit 2 run history: `First full eval: 18/20 ... Targeted rerun of pkg-05, pkg-12, pkg-13, and pkg-20: 4/4. Final full saved run: 19/20.`
+- Before: a plain `curl` request to `https://www.isuzuute.com.au/isuzuapi/Dealer/GetAllDealers` returns HTTP 403.
+- After: `uv run scrapy fetch "https://www.isuzuute.com.au/isuzuapi/Dealer/GetAllDealers"` returns HTTP 200 and a `Dealers` array of 165 records, three of which are marked `IsActive: False`.
+- `locations/spiders/isuzu_au.py` does not exist at commit `7f884e7c743256597d197ea7dc1af88a8b257309`, so issue #8510 remains actionable.
+
+**ship-gate**
+
+**What it is, and the judgment hole I wrote:** I built `ship-manifest.md` from the checks the repository itself requires: `uv sync --frozen` from the README setup, `uv run pytest tests/test_item_attributes.py -q` from `AGENTS.md`, and `uv run pre-commit run --all-files` from the pre-commit and CI configuration.
+
+**How it evolved, dated:**
+
+- 2026-11-16 (Unit 7, commit `63b2dfc`): The work that took care was tracing each check to a repository source instead of guessing; I also found no checks I needed to exclude, so the excluded table stays empty.
+
+**Evidence:**
+
+```text
+uv sync --frozen
+uv run pytest tests/test_item_attributes.py -q
+uv run pre-commit run --all-files
+```
+
+- On `feat/8510-isuzu-au`, the ship-gate ran every manifest check and passed, and `pr-precheck` then passed the branch, title and description.
+- Opened PR #20576, "Add isuzu_au spider (165 locations)": https://github.com/alltheplaces/alltheplaces/pull/20576
+
+**pr-monitor**
+
+**What it is, and the judgment hole I wrote:** I installed and used the PR monitor on PR #20576 and wrote an `alltheplaces`-specific playbook. In my playbook I set a 3-day human-review quiet period based on recent merged `alltheplaces` contributor PRs, and bot comments such as the scraper-bot's CI report do not reset that clock.
+
+**How it evolved, dated:**
+
+- 2026-11-16 (Unit 8, commit `63b2dfc`): The monitor first classified the bot's CI comment as FEEDBACK-IN, as if it were maintainer feedback needing a response, even though nothing in it asked for a change. I kept the draft off the PR thread, and my playbook now sets a 3-day human-review quiet period, based on recent merged contributor PRs, that bot comments do not reset.
+
+**Evidence:**
+
+```text
+isuzu_au.py
+165 items
+Resulted in a success ✅
+```
+
+- The scraper-bot ran the spider on the PR and reported a `success` with 165 items, matching my local run.
+- The PR monitor classified this as FEEDBACK-IN, but its drafted move was to not reply and wait for human review, which I agreed with.
+- November 16, 2026: no human maintainer feedback yet. Status: Awaiting review.
 
 ## Inventory
 
-One line each for the rest of the toolkit: what it is and where it
-stands (one bullet per tool; a compact sentence or two is fine).
-
-- [Tool name: one line.]
+- Voice guide: my rules for upstream comments; I only claim what my commands, logs, tests, or other artifacts actually demonstrate.
+- Voice guard: I installed and tested the voice guard so outgoing GitHub comments are checked against my communication rules before posting.
+- `CLAUDE.local.md` / repo memory: a local `CLAUDE.local.md` for `alltheplaces` with the repository conventions, relevant Isuzu spider patterns, and required test commands; I treat `isuzu_th.py` as a reference for brand attributes and categories only.
+- `plan-check`: I used it to grade the plan against the real API data and the repository's helpers before building from it; it caught the data-shape and `apply_category` problems before I wrote code, and ultimately returned `accept`.
+- `pr-precheck`: in Unit 4 I kept commit hygiene as `preferred` rather than `required`, and the final full run reached 18/20; in Unit 7 it passed the branch, title and description before I opened PR #20576.
 
 ## The Arc
 
-The story of the toolkit in order: friction, change, result, dated.
-Your weekly Toolkit entries are the source; read your own record and
-tell it oldest first.
-
-Write one block per beat, in the shape below, oldest first. Keep all four labels on every
-beat, each on its own line. The `Result:` line is what the beat was for: it says what
-happened *after* the change, which is not the same sentence as the change itself. If a beat
-never reached a result, write `Result: none` — an honest beat that did not land still counts
-fully as a beat.
-
-Full credit asks for **at least two** beats whose `Result:` line names something that
-actually happened afterwards. A beat about something that did not work counts fully as a
-beat, and when the work happened never moves this score.
-
 **Beat 1**
-Date: [a date, or a month and year]
-Friction: [what was going wrong, and how you noticed]
-Change: [what you changed because of it]
-Result: [what happened afterwards, or the word none]
+Date: November 2026 (Unit 5, 2026-11-15)
+Friction: Some searches returned weak, already-claimed, or overly broad issues, and the original scope check could reject bounded issues simply because they contained an open design edge.
+Change: I refined the search query and ranking approach, documented the problems in `scan-notes.md`, and replaced the old newcomer-scope check with a `scope-feasible` check so open design questions increase difficulty instead of automatically causing rejection.
+Result: The scan surfaced issue #8510, the scout returned an `accept` verdict with a straightforward difficulty rating, and I chose it.
 
 **Beat 2**
-Date: [a date, or a month and year]
-Friction: [what was going wrong, and how you noticed]
-Change: [what you changed because of it]
-Result: [what happened afterwards, or the word none]
+Date: November 2026 (Unit 6, 2026-11-16)
+Friction: The initial reproduction used plain `curl`, which returned HTTP 403 and made the API look unavailable when it was not.
+Change: I changed the reproduction to use the project's own Scrapy client instead of `curl`.
+Result: Scrapy returned HTTP 200 and the dealer response contained 165 records, and I confirmed that `locations/spiders/isuzu_au.py` does not exist.
 
-Copy the beat shape above for as many beats as your term had.
+**Beat 3**
+Date: November 2026 (Unit 7, 2026-11-16)
+Friction: The work that took care was tracing each check to a repository source instead of guessing.
+Change: I built `ship-manifest.md` from the checks the repository itself requires and ran the ship-gate on my real branch before opening the PR.
+Result: On `feat/8510-isuzu-au`, the ship-gate ran every manifest check and passed, `pr-precheck` then passed the branch, title and description, and I opened PR #20576.
+
+**Beat 4**
+Date: November 2026 (Unit 8, 2026-11-16)
+Friction: The monitor read the scraper-bot comment on PR #20576 and initially classified the PR as FEEDBACK-IN, as if it were maintainer feedback needing a response.
+Change: In my playbook I set a 3-day human-review quiet period, and bot comments such as the scraper-bot's CI report do not reset that clock.
+Result: I kept the draft off the PR thread and did not reply; the PR status is Awaiting review, with no human maintainer feedback yet.
 
 ## Limitations and What's Next
 
-What the toolkit as a whole still does not do, and what you would
-build or change next. Write this section last; it will be better
-after the rest.
+The PR is open and no maintainer has looked at it yet, so the design could still change. I combined each dealer into one feature; a maintainer might want separate features for Sales, Service and Parts, especially where departments have different hours. The API has a top-level `IsActive` flag, and I couldn't find any documentation on what it means. Next time, I would inspect the full API structure and the closest existing spiders earlier before locking in assumptions about how the records should map into the project. I would also look up the project's review pace before opening the PR, so I know from the start how long to wait before following up. If maintainers request changes, I'll make the changes on the same branch, re-run pytest, pre-commit and ship-gate, and reply to each review comment so the reviewer can see what I changed and why.
 
-[The honest limits, and what comes next, in your own sentences.]
+**Tool limits.**
 
-**Tool limits.** One line per featured tool, in the same order as the entries above, naming
-where that tool still stops or what it still gets wrong. A small honest limit is full credit;
-"none really" is not a limit. If a tool genuinely has none you can name, write `none` after
-its label rather than deleting the line.
-
-issue-scout: [where this tool still stops, in plain words, or the word none]
-[tool name]: [where this tool still stops, in plain words, or the word none]
+issue-scout: Some searches returned weak, already-claimed, or overly broad issues, and one query initially returned no useful results.
+repro-check: The endpoint's response depended on the HTTP client, so a plain `curl` request made the API look unavailable when it was not.
+ship-gate: Tracing each check to a repository source instead of guessing took care.
+pr-monitor: The monitor first classified the bot's CI comment as FEEDBACK-IN, as if it were maintainer feedback needing a response, even though nothing in it asked for a change.
