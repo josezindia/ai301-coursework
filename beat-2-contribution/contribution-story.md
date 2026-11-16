@@ -188,39 +188,54 @@ Deviations: none yet.
 
 ## Testing Strategy
 
-[What observable checks prove the fix: your reproduction steps re-run
-against the built change (before and after), and the repo's own test
-suite or checks with the outcome shown. "Tests pass" with nothing
-observable named is not a strategy.]
+**Before and after**
+
+- Before: at commit `7f884e7c743256597d197ea7dc1af88a8b257309`, `locations/spiders/isuzu_au.py` does not exist, so the project emits no Isuzu UTE Australia locations, while the dealer API returns 165 records in `Dealers`.
+- After: on branch `feat/8510-isuzu-au`, `uv run scrapy runspider locations/spiders/isuzu_au.py -o out.geojson -L INFO` produces exactly **165 features**, one per record in the API. The crawl stats show `atp/brand/Isuzu: 165`, `atp/brand_wikidata/Q29803: 165`, `atp/nsi/match_perfect: 165`, `atp/country/AU: 165`, and a category split of `atp/category/shop/car: 154` and `atp/category/shop/car_repair: 11`.
+
+**Representative records**
+
+I read individual records rather than relying on the count, picking dealers that exercise each branch of the category logic:
+
+| Ref | Dealer | Source data | Output checked |
+|---|---|---|---|
+| `7207` | Blacklocks Isuzu UTE, Lavington NSW | Active; Sales, Service and Parts | `shop=car`, `service:vehicle:car_repair=yes`, `service:vehicle:car_parts=yes`; address "Corner Kaitlers Rd and Wagga Rd", postcode 2641; phone `+61 2 6049 5500`; website present; hours `Mo-Fr 08:00-17:00; Sa 09:00-12:30` |
+| `7236a` | Victory Isuzu UTE - Service and Parts, South Murwillumbah NSW | Active; no Sales, has Service and Parts | `shop=car_repair`, `service:vehicle:car_parts=yes`; address and coordinates taken from the Service department; no `Website` in the data, and the spider emits the item without a website instead of failing; hours `Mo-Fr 07:30-17:00` |
+| `7242` | Bathurst Isuzu UTE, Kelso NSW | Top-level `IsActive: False`, but has Sales, Service and Parts | `shop=car`, `service:vehicle:car_repair=yes`, `service:vehicle:car_parts=yes`; address "202 Sydney Road", postcode 2795; hours `Mo-Fr 08:30-17:30; Sa 08:30-15:00` |
+| `7248` | Cardiff Isuzu UTE, Cardiff NSW | Active; Sales, Service and Parts | `shop=car`, repair and parts extras `yes`; hours across three day groups, `Mo-Fr 08:00-17:30; Sa 08:30-17:30; Su 09:30-17:00`, confirming `add_ranges_from_string` handles the irregular hours text |
+
+**Repository checks**
+
+- `uv run pytest tests/test_item_attributes.py -q`: **3 passed**, so the Isuzu brand and Wikidata values match NSI.
+- `uv run pre-commit run --files locations/spiders/isuzu_au.py`: **passed** (formatting, import sorting and lint hooks all clean).
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: Scrapy's `runspider` through `uv` to build the GeoJSON output and crawl stats, a short Python script to pull the four representative records out of the output and compare them with the saved API response, then the repository's `pytest` and `pre-commit` checks named in `CLAUDE.local.md`.
+- What it produced: 165 features matching the 165 API records, stats confirming brand, Wikidata, NSI and country on every item, field-level confirmation for `7207`, `7236a`, `7242` and `7248`, 3 passing tests, and a clean pre-commit run.
+- Difficulties: the feature count alone could not show whether categories, extras, missing websites or irregular hours were handled correctly, and the three `IsActive: False` records made it unclear at first whether 165 was the right number.
+- What changed: I chose records by what they exercise (full dealer, service-only dealer with no website, inactive dealer, multi-group hours) and checked each one against its source record, instead of only checking the item count.
 
 ---
 
 ## Implementation Notes
 
-[A running log, added to as you work. Date each entry. What you
-built, decisions you made when you made them, wrong turns included.]
+**2026-11-16**
 
-**[Date]**
+Created `locations/spiders/isuzu_au.py` on branch `feat/8510-isuzu-au` as a `JSONBlobSpider` reading the `Dealers` array, with `item_attributes = ISUZU_SHARED_ATTRIBUTES`. As planned after `plan-check`, the fields are mapped explicitly rather than through `DictParser`: the spider takes the first department present (Sales, then Service, then Parts) and reads address, coordinates, phone, email and website from it, using the dealer `Code` as `ref`. `Website` is read only when present, because some dealers (for example `7236a`) have none.
 
-[Entry]
+Categories follow the one-feature-per-dealer strategy. Because `apply_category` overwrites `shop`, each dealer gets a single `shop` value: `shop=car` when it has Sales data, otherwise `shop=car_repair`. Repair service on a sales dealer and parts sales are recorded with `apply_yes_no` extras (`service:vehicle:car_repair`, `service:vehicle:car_parts`) instead of competing `shop` tags. Opening hours are built by passing each `"<day> <hours>"` string to `OpeningHours.add_ranges_from_string`.
 
-**[Date]**
+**2026-11-16**
 
-[Entry]
+Ran the spider and inspected the output: 165 features, matching the 165 API records, so nothing was dropped and the pipelines did not exclude the `IsActive: False` records. Small plan correction: dealer `7242` (Bathurst Isuzu UTE) is marked `IsActive: False` at the top level but still has full Sales, Service and Parts data, so under the Sales rule it is tagged `shop=car`. The plan had not considered that an inactive record could still carry sales data. I kept the planned behaviour of not filtering inactive records early. This correction did not change the overall design: still one new file, one feature per dealer, and the same category rules. Then ran `pytest` (3 passed) and `pre-commit` (passed) on the new file.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: Claude Code with my `CLAUDE.local.md` repo memory to write the spider against the plan, then Scrapy `runspider`, a Python script comparing output records with the saved API response, `pytest` and `pre-commit` to check the result.
+- What it produced: the single new spider file, a 165-feature output, the `7242` finding, and passing test and lint runs.
+- Difficulties: the `IsActive` flag and the department data disagree for `7242`, which the plan did not anticipate, and `apply_category`'s overwrite of `shop` meant the three categories in the issue could not all be `shop` tags on one feature.
+- What changed: I recorded the `7242` correction here instead of adding special-case filtering, and used `shop=car` or `shop=car_repair` plus yes/no extras for repair and parts, so the design from the plan stayed the same.
 
 ---
 
