@@ -41,6 +41,17 @@ I built a shortlist of candidate issues from the Open Source Issue Tracker, then
 - Unit 2 run history: `First full eval: 18/20 ... Targeted rerun of pkg-05, pkg-12, pkg-13, and pkg-20: 4/4. Final full saved run: 19/20.`
 - Before: a plain `curl` request to `https://www.isuzuute.com.au/isuzuapi/Dealer/GetAllDealers` returns HTTP 403.
 - After: `uv run scrapy fetch "https://www.isuzuute.com.au/isuzuapi/Dealer/GetAllDealers"` returns HTTP 200 and a `Dealers` array of 165 records, three of which are marked `IsActive: False`.
+- Example dealer record from the API:
+
+```json
+{
+  "Code": "7207",
+  "Name": "Blacklocks Isuzu UTE",
+  "State": "New South Wales",
+  "PostCode": "2641"
+}
+```
+
 - `locations/spiders/isuzu_au.py` does not exist at commit `7f884e7c743256597d197ea7dc1af88a8b257309`, so issue #8510 remains actionable.
 
 **ship-gate**
