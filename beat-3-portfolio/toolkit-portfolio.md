@@ -118,7 +118,7 @@ Result: I kept the draft off the PR thread and did not reply unnecessarily; late
 
 ## Limitations and What's Next
 
-PR #20576 has now been merged, so the contribution itself is complete. The toolkit still depends on my judgment: issue-scout can help evaluate whether an issue is feasible, but it cannot know whether I will actually enjoy working on it; repro-check can verify the behavior I reproduced, but not every possible edge case; ship-gate can prove the required checks passed, but not that every design choice is the best one; and pr-monitor can still misread context, especially bot activity. If I continued improving the toolkit, I would make the tools share more context with each other and make issue discovery more focused on infrastructure, platform engineering, Linux, cloud, and automation work.
+[PR #20576](https://github.com/alltheplaces/alltheplaces/pull/20576) has now been merged, so the contribution itself is complete. The toolkit still depends on my judgment: issue-scout can help evaluate whether an issue is feasible, but it cannot know whether I will actually enjoy working on it; repro-check can verify the behavior I reproduced, but not every possible edge case; ship-gate can prove the required checks passed, but not that every design choice is the best one; and pr-monitor can still misread context, especially bot activity. If I continued improving the toolkit, I would make the tools share more context with each other and make issue discovery more focused on infrastructure, platform engineering, Linux, cloud, and automation work.
 
 **Tool limits.**
 
