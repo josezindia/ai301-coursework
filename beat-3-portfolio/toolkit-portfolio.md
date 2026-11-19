@@ -6,11 +6,11 @@ Path: `beat-3-portfolio/toolkit-portfolio.md`
 
 ## Featured Tools
 
-I manually went through the Open Source Issue Tracker page by page to collect candidate issues, then used my customized `issue-scout` to evaluate which ones were realistic and matched my interests in Python, backend work, APIs, infrastructure, and automation rather than frontend-heavy changes. From there, I treated each tool as a separate safety check: `repro-check` confirmed the problem was real, the ship-gate made sure the repository's own checks passed before I opened the PR, and the PR monitor kept me from replying to a bot comment that needed no answer.
+I built a shortlist of candidate issues from the Open Source Issue Tracker, then used my customized `issue-scout` to evaluate which ones were realistic and matched my interests in Python, backend work, APIs, infrastructure, and automation rather than frontend-heavy changes. From there, I treated each tool as a separate safety check: `repro-check` confirmed the problem was real, the ship-gate made sure the repository's own checks passed before I opened the PR, and the PR monitor kept me from replying to a bot comment that needed no answer.
 
 **issue-scout**
 
-**What it is, and the judgment hole I wrote:** I used its rubric and search strategy to evaluate and re-grade candidate issues I had collected from the Open Source Issue Tracker. I updated the skill's scope and search strategy to reflect my Python, backend, infrastructure, automation, and AI systems interests. My fit profile says:
+**What it is, and the judgment hole I wrote:** I used its rubric and search strategy to evaluate and re-grade a shortlist of candidate issues I had built from the Open Source Issue Tracker. I updated the skill's scope and search strategy to reflect my Python, backend, infrastructure, automation, and AI systems interests. My fit profile says:
 
 > I prefer issues that are clearly scoped and reproducible, especially those involving Python, backend systems, infrastructure, cloud, Windows/Linux environments, CI/CD, GitHub Actions, or automation. I would like to avoid issues that depend heavily on frontend design work, obscure languages, or large architectural changes.
 
@@ -24,7 +24,7 @@ I manually went through the Open Source Issue Tracker page by page to collect ca
 - Unit 1 run history: `16/20 → 1/4 targeted → 1/1 issue-01 → 1/1 issue-19 → 1/1 issue-15 → 3/3 targeted → 19/20 full run → 18/20 final saved run.`
 - Before (Unit 1 rubric row): `Newcomer-sized scope | ... | Pass unless the issue is explicitly an umbrella or tracking issue, is purely a usage/support question, has unresolved design debate with no maintainer decision, or a maintainer states that the fix requires changes to core internals. ... | required`
 - After (Unit 5): a `scope-feasible` check, so open design questions increase difficulty instead of automatically causing rejection.
-- Result: after I collected candidate issues from the tracker and updated the scout's scope-feasibility rule, `alltheplaces/alltheplaces` issue #8510 returned an `accept` verdict with a straightforward difficulty rating. The issue asks for an Australian Isuzu UTE spider backed by an official dealer API.
+- Result: after I built a shortlist of candidate issues and updated the scout's scope-feasibility rule, `alltheplaces/alltheplaces` issue #8510 returned an `accept` verdict with a straightforward difficulty rating. The issue asks for an Australian Isuzu UTE spider backed by an official dealer API.
 - Claim comment: https://github.com/alltheplaces/alltheplaces/issues/8510#issuecomment-6909757445
 
 **repro-check**
@@ -96,7 +96,7 @@ Resulted in a success ✅
 Date: November 2026 (Unit 5, 2026-11-15)
 Friction: Some searches returned weak, already-claimed, or overly broad issues, and the original scope check could reject bounded issues simply because they contained an open design edge.
 Change: I refined the search query and ranking approach, documented the problems in `scan-notes.md`, and replaced the old newcomer-scope check with a `scope-feasible` check so open design questions increase difficulty instead of automatically causing rejection.
-Result: After I collected candidate issues from the tracker, issue #8510 received an `accept` verdict with a straightforward difficulty rating, and I chose it.
+Result: After I built a shortlist of candidate issues, issue #8510 received an `accept` verdict with a straightforward difficulty rating, and I chose it.
 
 **Beat 2**
 Date: November 2026 (Unit 6, 2026-11-16)
