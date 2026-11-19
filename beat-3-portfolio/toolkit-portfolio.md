@@ -6,11 +6,11 @@ Path: `beat-3-portfolio/toolkit-portfolio.md`
 
 ## Featured Tools
 
-I used my `issue-scout` to search for newcomer-sized issues that matched my preference for Python, backend work, APIs, infrastructure, and automation rather than frontend-heavy changes. What got me through was treating each tool as a separate safety check. `repro-check` confirmed the problem was real, the ship-gate made sure the repository's own checks passed before I opened the PR, and the PR monitor kept me from replying to a bot comment that needed no answer.
+I manually went through the Open Source Issue Tracker page by page to collect candidate issues, then used my customized `issue-scout` to evaluate which ones were realistic and matched my interests in Python, backend work, APIs, infrastructure, and automation rather than frontend-heavy changes. From there, I treated each tool as a separate safety check: `repro-check` confirmed the problem was real, the ship-gate made sure the repository's own checks passed before I opened the PR, and the PR monitor kept me from replying to a bot comment that needed no answer.
 
 **issue-scout**
 
-**What it is, and the judgment hole I wrote:** I used its search strategy and rubric to find and re-grade open-source issues that matched my Python, backend, infrastructure, API, and automation interests. I updated the skill's scope and search strategy to reflect my Python, backend, infrastructure, automation, and AI systems interests. My fit profile says:
+**What it is, and the judgment hole I wrote:** I used its rubric and search strategy to evaluate and re-grade candidate issues I had collected from the Open Source Issue Tracker. I updated the skill's scope and search strategy to reflect my Python, backend, infrastructure, automation, and AI systems interests. My fit profile says:
 
 > I prefer issues that are clearly scoped and reproducible, especially those involving Python, backend systems, infrastructure, cloud, Windows/Linux environments, CI/CD, GitHub Actions, or automation. I would like to avoid issues that depend heavily on frontend design work, obscure languages, or large architectural changes.
 
@@ -24,7 +24,7 @@ I used my `issue-scout` to search for newcomer-sized issues that matched my pref
 - Unit 1 run history: `16/20 → 1/4 targeted → 1/1 issue-01 → 1/1 issue-19 → 1/1 issue-15 → 3/3 targeted → 19/20 full run → 18/20 final saved run.`
 - Before (Unit 1 rubric row): `Newcomer-sized scope | ... | Pass unless the issue is explicitly an umbrella or tracking issue, is purely a usage/support question, has unresolved design debate with no maintainer decision, or a maintainer states that the fix requires changes to core internals. ... | required`
 - After (Unit 5): a `scope-feasible` check, so open design questions increase difficulty instead of automatically causing rejection.
-- Result: the scan surfaced `alltheplaces/alltheplaces` issue #8510, which asks for an Australian Isuzu UTE spider backed by an official dealer API. After updating the scout's scope-feasibility rule and re-grading the issue, the scout returned an `accept` verdict with a straightforward difficulty rating.
+- Result: after I collected candidate issues from the tracker and updated the scout's scope-feasibility rule, `alltheplaces/alltheplaces` issue #8510 returned an `accept` verdict with a straightforward difficulty rating. The issue asks for an Australian Isuzu UTE spider backed by an official dealer API.
 - Claim comment: https://github.com/alltheplaces/alltheplaces/issues/8510#issuecomment-6909757445
 
 **repro-check**
@@ -80,7 +80,7 @@ Resulted in a success ✅
 
 - The scraper-bot ran the spider on the PR and reported a `success` with 165 items, matching my local run.
 - The PR monitor classified this as FEEDBACK-IN, but its drafted move was to not reply and wait for human review, which I agreed with.
-- November 16, 2026: no human maintainer feedback yet. Status: Awaiting review.
+- November 16, 2026: the PR initially had no human maintainer feedback, so I waited instead of posting an unnecessary reply. Later that day, PR #20576 was merged into `alltheplaces:master`.
 
 ## Inventory
 
@@ -96,7 +96,7 @@ Resulted in a success ✅
 Date: November 2026 (Unit 5, 2026-11-15)
 Friction: Some searches returned weak, already-claimed, or overly broad issues, and the original scope check could reject bounded issues simply because they contained an open design edge.
 Change: I refined the search query and ranking approach, documented the problems in `scan-notes.md`, and replaced the old newcomer-scope check with a `scope-feasible` check so open design questions increase difficulty instead of automatically causing rejection.
-Result: The scan surfaced issue #8510, the scout returned an `accept` verdict with a straightforward difficulty rating, and I chose it.
+Result: After I collected candidate issues from the tracker, issue #8510 received an `accept` verdict with a straightforward difficulty rating, and I chose it.
 
 **Beat 2**
 Date: November 2026 (Unit 6, 2026-11-16)
@@ -114,11 +114,11 @@ Result: On `feat/8510-isuzu-au`, the ship-gate ran every manifest check and pass
 Date: November 2026 (Unit 8, 2026-11-16)
 Friction: The monitor read the scraper-bot comment on PR #20576 and initially classified the PR as FEEDBACK-IN, as if it were maintainer feedback needing a response.
 Change: In my playbook I set a 3-day human-review quiet period, and bot comments such as the scraper-bot's CI report do not reset that clock.
-Result: I kept the draft off the PR thread and did not reply; the PR status is Awaiting review, with no human maintainer feedback yet.
+Result: I kept the draft off the PR thread and did not reply unnecessarily; later that day, PR #20576 was merged into `alltheplaces:master`.
 
 ## Limitations and What's Next
 
-The PR is open and no maintainer has looked at it yet, so the design could still change. I combined each dealer into one feature; a maintainer might want separate features for Sales, Service and Parts, especially where departments have different hours. The API has a top-level `IsActive` flag, and I couldn't find any documentation on what it means. Next time, I would inspect the full API structure and the closest existing spiders earlier before locking in assumptions about how the records should map into the project. I would also look up the project's review pace before opening the PR, so I know from the start how long to wait before following up. If maintainers request changes, I'll make the changes on the same branch, re-run pytest, pre-commit and ship-gate, and reply to each review comment so the reviewer can see what I changed and why.
+PR #20576 has now been merged, so the contribution itself is complete. The toolkit still depends on my judgment: issue-scout can help evaluate whether an issue is feasible, but it cannot know whether I will actually enjoy working on it; repro-check can verify the behavior I reproduced, but not every possible edge case; ship-gate can prove the required checks passed, but not that every design choice is the best one; and pr-monitor can still misread context, especially bot activity. If I continued improving the toolkit, I would make the tools share more context with each other and make issue discovery more focused on infrastructure, platform engineering, Linux, cloud, and automation work.
 
 **Tool limits.**
 
